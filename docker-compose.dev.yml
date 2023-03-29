@@ -38,6 +38,8 @@ services:
       - habitica
     ports:
       - "27017:27017"
+    volumes:
+      - /mnt/mongodb:/data/db
 networks:
   habitica:
     driver: bridge

@@ -283,7 +283,7 @@
       </div>
 
       <div
-        v-if="!IS_PRODUCTION && isUserLoaded"
+        v-if="IS_PRODUCTION && isUserLoaded"
         class="debug-toggle"
       >
         <button
