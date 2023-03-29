@@ -39,7 +39,7 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - /mnt/mongodb:/data/db
+      - /hab/mongodb:/data/db
 networks:
   habitica:
     driver: bridge
