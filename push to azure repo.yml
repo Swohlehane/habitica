@@ -1,0 +1,20 @@
+#push to azure repo
+#login
+connect-azuread
+az login
+#create build client
+az acr build --image acrhabiticaprod001.azurecr.io/habitica_client:v1 --registry acrhabiticaprod001.azurecr.io --file dockerfile-dev .
+#Create build server
+az acr build --image acrhabiticaprod001.azurecr.io/habitica_server:v1 --registry acrhabiticaprod001.azurecr.io --file dockerfile-dev .
+#create container
+az container create -g rg-habitica-prod-002 -f .\habiticayaml.yml
+#delete container
+az container delete --name acg-habitica-prod-001 --resource-group rg-habitica-prod-002
+#logs verfolgen Client
+az container logs --name acg-habitica-prod-001 --resource-group rg-habitica-prod-002 --container-name aci-habiticaclient-prod-001 --follow
+#logs verfolgen server
+az container logs --name acg-habitica-prod-001 --resource-group rg-habitica-prod-002 --container-name aci-habiticaserver-prod-001 --follow
+
+az container exec --resource-group rg-habitica-prod-002 --name acg-habitica-prod-001 --container-name aci-habiticaserver-prod-001 --exec-command "echo fs.inotify.max_user_watches=582222"
+az container exec --resource-group rg-habitica-prod-002 --name acg-habitica-prod-001 --container-name aci-habiticaserver-prod-001 --exec-command "sudo tee -a /etc/sysctl.conf"
+az container exec --resource-group rg-habitica-prod-002 --name acg-habitica-prod-001 --container-name aci-habiticaserver-prod-001 --exec-command "sudo sysctl -p"
